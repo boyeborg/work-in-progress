@@ -1,4 +1,4 @@
-package no.hal.learning.exercise.standalone.samples;
+package no.ntnu.boyebn.master;
 
 import org.eclipse.emf.ecore.EObject;
 
