@@ -33,7 +33,8 @@ public class Export {
 			new TotalTimeCollector(10 * 60 * 1000), // 10 minutes
 			new CompletionCollector(),
 			new DebugRunsCollector(),
-			new AfterSuccessWorkCollector(10 * 60 * 1000) // 10 minutes
+			new AfterSuccessWorkCollector(10 * 60 * 1000), // 10 minutes
+			new EditCenterOfMassCollector()
 			};
 
 	public static void main(String[] args) {
@@ -121,7 +122,8 @@ public class Export {
 			}
 		}
 		
-		Path csvFile = Paths.get("data/exportedData.csv");
+		Path csvFile = Paths.get("data/data.csv");
+		
 		try {
 			Files.write(csvFile, lines, Charset.forName("UTF-8"));
 		} catch (IOException e) {
