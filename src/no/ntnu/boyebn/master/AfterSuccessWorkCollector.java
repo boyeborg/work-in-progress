@@ -18,7 +18,9 @@ public class AfterSuccessWorkCollector implements DataCollector {
 	
 	public AfterSuccessWorkCollector(double maxPauseTimeInMillis) {
 		this.maxPauseTimeInMillis = maxPauseTimeInMillis;
-		reset();
+		isCompleted = false;
+		sourceEditTimestamps = new ArrayList<>();
+		completedTimestamp = Double.MAX_VALUE;
 	}
 
 	@Override
@@ -64,13 +66,6 @@ public class AfterSuccessWorkCollector implements DataCollector {
 		}
 		
 		return Long.toString(Math.round(totalTime/(1000.0)));
-	}
-
-	@Override
-	public void reset() {
-		isCompleted = false;
-		sourceEditTimestamps = new ArrayList<>();
-		completedTimestamp = Double.MAX_VALUE;
 	}
 
 }

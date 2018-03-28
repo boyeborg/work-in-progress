@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 
-
 import no.hal.learning.exercise.ExercisePackage;
 import no.hal.learning.exercise.jdt.JdtPackage;
 import no.hal.learning.exercise.junit.JunitPackage;
@@ -29,13 +28,13 @@ import no.hal.learning.exercise.workspace.WorkspacePackage;
 public class Export {
 	
 	static String EXERCISE_PATH = "data/Øving 5";
-	static DataCollector[] collectors = {
-			new TotalTimeCollector(10 * 60 * 1000), // 10 minutes
-			new CompletionCollector(),
-			new DebugRunsCollector(),
-			new AfterSuccessWorkCollector(10 * 60 * 1000), // 10 minutes
-			new EditCenterOfMassCollector()
-			};
+	static DataCollectorFactory.Collector[] collectors = {
+			DataCollectorFactory.Collector.AfterSuccessWork,
+			DataCollectorFactory.Collector.Completion,
+			DataCollectorFactory.Collector.DebugRuns,
+			DataCollectorFactory.Collector.EditCenterOfMass,
+			DataCollectorFactory.Collector.TotalTime
+	};
 
 	public static void main(String[] args) {
 		
@@ -54,14 +53,7 @@ public class Export {
 		List<String> nameOfExercises = new ArrayList<>();
 		
 		// Create a list to store all the lines that are going to be output to the CSV file 
-		List<String> lines = new ArrayList<>();
-		
-		// Add the header to the CSV file
-		String header = "student_id,exercise_number";
-		for (DataCollector dataCollector : collectors) {
-			header += String.format(",%s", dataCollector.getName());
-		}
-		lines.add(header);
+		List<DataLine> lines = new ArrayList<>();
 		
 		// Loop through the student folders within the exercise folder
 		for (File studentDirectory : new File(EXERCISE_PATH).listFiles(File::isDirectory)) {
@@ -80,17 +72,15 @@ public class Export {
 			// Loop through all exercise files
 			for (File studentExercise : studentExercises) {
 				
-				// Reset all of the data collectors
-				for (DataCollector dataCollector : collectors) {
-					dataCollector.reset();
-				}
-				
 				if (!nameOfExercises.contains(studentExercise.getName())) {
 					nameOfExercises.add(studentExercise.getName());
 				}
 				
 				// Get the number representing the exercise
 				int nameIndex = nameOfExercises.indexOf(studentExercise.getName());
+				
+				// Create a new line
+				DataLine line = new DataLine(studentId, nameIndex, collectors);
 				
 				// Get the resource containing the events of the XML file
 				Resource resource = resourceSet.getResource(URI.createURI(studentExercise.getAbsolutePath()), true);
@@ -103,29 +93,30 @@ public class Export {
 					// Get the event
 					EObject eObject = it.next();
 					
-					// Feed the event to all the data collectors
-					for (DataCollector dataCollector : collectors) {
-						dataCollector.addEvent(eObject);
-					}
+					// Feed the event to the line
+					line.addEvent(eObject);
 				}
 				
-				// Create the new line for the CSV
-				String line = String.format("%s,%d", studentId, nameIndex);
-				
-				// Add the results of all the event to the line
-				for (DataCollector dataCollector : collectors) {
-					line += String.format(",%s", dataCollector.getResult());
-				}
-				
-				// Add the line to the list
+				// Add the line to the list of lines
 				lines.add(line);
 			}
 		}
 		
+		// Create a list of lines for the CSV file
+		List<String> csvLines = new ArrayList<>();
+		
+		// Add headers
+		csvLines.add(String.join(",", lines.get(0).getNames()));
+		
+		// Add data
+		lines.stream().map(DataLine::toString).forEach(csvLines::add);
+		
+		// Get the CSV file
 		Path csvFile = Paths.get("data/data.csv");
 		
+		// Write the lines to the CSV file
 		try {
-			Files.write(csvFile, lines, Charset.forName("UTF-8"));
+			Files.write(csvFile, csvLines, Charset.forName("UTF-8"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

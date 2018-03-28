@@ -49,10 +49,5 @@ public class TotalTimeCollector implements DataCollector {
 		// Convert to seconds
 		return Long.toString(Math.round(totalTime/(1000.0)));
 	}
-
-	@Override
-	public void reset() {
-		timestamps = new ArrayList<>();
-	}
 	
 }

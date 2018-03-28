@@ -12,7 +12,7 @@ public class EditCenterOfMassCollector implements DataCollector {
 	Map<Long, Integer> edits;
 	
 	public EditCenterOfMassCollector() {
-		reset();
+		edits = new TreeMap<>();
 	}
 
 	@Override
@@ -39,11 +39,6 @@ public class EditCenterOfMassCollector implements DataCollector {
 		});
 		
 		return Long.toString(Math.round(res[0]/res[1]));
-	}
-
-	@Override
-	public void reset() {
-		edits = new TreeMap<>();
 	}
 
 }

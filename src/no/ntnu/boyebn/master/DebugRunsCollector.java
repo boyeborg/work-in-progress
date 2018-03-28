@@ -9,7 +9,7 @@ public class DebugRunsCollector implements DataCollector {
 	int numDebugRuns;
 	
 	public DebugRunsCollector() {
-		reset();
+		numDebugRuns = 0;
 	}
 
 	@Override
@@ -29,11 +29,6 @@ public class DebugRunsCollector implements DataCollector {
 	@Override
 	public String getResult() {
 		return Integer.toString(numDebugRuns);
-	}
-
-	@Override
-	public void reset() {
-		numDebugRuns = 0;
 	}
 
 }
