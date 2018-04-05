@@ -1,8 +1,7 @@
 package no.ntnu.boyebn.master;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
+import java.util.TreeMap;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -11,23 +10,21 @@ import no.hal.learning.exercise.junit.impl.JunitTestEventImpl;
 
 public class AfterSuccessWorkCollector implements DataCollector {
 	
-	double maxPauseTimeInMillis;
 	boolean isCompleted;
-	double completedTimestamp;
-	List<Double> sourceEditTimestamps;
+	long completedTimestamp;
+	TreeMap<Long, Integer> edits;
 	
-	public AfterSuccessWorkCollector(double maxPauseTimeInMillis) {
-		this.maxPauseTimeInMillis = maxPauseTimeInMillis;
+	public AfterSuccessWorkCollector() {
 		isCompleted = false;
-		sourceEditTimestamps = new ArrayList<>();
-		completedTimestamp = Double.MAX_VALUE;
+		completedTimestamp = Long.MAX_VALUE;
+		edits = new TreeMap<>();
 	}
 
 	@Override
 	public void addEvent(EObject eObject) {
 		if (eObject instanceof JdtSourceEditEventImpl) {
-			double currTime = ((JdtSourceEditEventImpl) eObject).getTimestamp();
-			sourceEditTimestamps.add(currTime);
+			JdtSourceEditEventImpl editEvent = (JdtSourceEditEventImpl) eObject;
+			edits.put(editEvent.getTimestamp(), Math.abs(editEvent.getSizeMeasure()));
 		} else if (eObject instanceof JunitTestEventImpl) {
 			JunitTestEventImpl testEvent = (JunitTestEventImpl) eObject;
 			if (testEvent.getCompletion() == 1.0) {
@@ -48,24 +45,19 @@ public class AfterSuccessWorkCollector implements DataCollector {
 			return "0";
 		}
 		
-		List<Double> editsAfterCompletion = sourceEditTimestamps.stream()
-				.filter(timestamp -> (timestamp > completedTimestamp))
-				.sorted()
-				.collect(Collectors.toList());
+		Long startKey = edits.higherKey(completedTimestamp);
 		
-		
-		double prevTime = -1;
-		double totalTime = 0;
-		
-		for (double time : editsAfterCompletion) {
-			if (prevTime != -1) {
-				totalTime += Math.min(time - prevTime, maxPauseTimeInMillis);
-			}
-			
-			prevTime = time;
+		if (startKey == null) {
+			return "0";
 		}
 		
-		return Long.toString(Math.round(totalTime/(1000.0)));
+		//edits.lowerEntry(completedTimestamp).getValue()
+		
+		try {
+			return Integer.toString(edits.tailMap(startKey, true).values().stream().reduce(Integer::sum).get());			
+		} catch (NoSuchElementException e) {
+			return "0";
+		}
 	}
 
 }
