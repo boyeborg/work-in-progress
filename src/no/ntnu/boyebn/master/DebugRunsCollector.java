@@ -8,6 +8,8 @@ public class DebugRunsCollector implements DataCollector {
 	
 	int numDebugRuns;
 	
+	static double L2norm = 0;
+	
 	public DebugRunsCollector() {
 		numDebugRuns = 0;
 	}
@@ -27,8 +29,15 @@ public class DebugRunsCollector implements DataCollector {
 	}
 
 	@Override
+	public void calculateResult() {
+		L2norm += Math.pow(numDebugRuns, 2);
+	}
+	
+	@Override
 	public String getResult() {
-		return Integer.toString(numDebugRuns);
+		double normalizedResult = numDebugRuns/Math.sqrt(L2norm);
+		
+		return String.format("%.3f", normalizedResult);
 	}
 
 }

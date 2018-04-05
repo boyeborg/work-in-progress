@@ -9,6 +9,8 @@ public class WarningCountCollector implements DataCollector {
 	long latestEditTimestamp;
 	int warningCount;
 	
+	static double L2norm = 0;
+	
 	public WarningCountCollector() {
 		latestEditTimestamp = 0;
 		warningCount = 0;
@@ -29,14 +31,17 @@ public class WarningCountCollector implements DataCollector {
 	public String getName() {
 		return "warnings";
 	}
+	
+	@Override
+	public void calculateResult() {
+		L2norm += Math.pow(warningCount, 2);
+	}
 
 	@Override
 	public String getResult() {
-		if (warningCount > 0) {
-			return Integer.toString(warningCount);
-		}
+		double normalizedResult = Math.abs(warningCount)/Math.sqrt(L2norm);
 		
-		return "0";
+		return String.format("%.3f", normalizedResult);
 	}
 
 }

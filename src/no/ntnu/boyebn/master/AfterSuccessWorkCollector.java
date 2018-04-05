@@ -13,6 +13,9 @@ public class AfterSuccessWorkCollector implements DataCollector {
 	boolean isCompleted;
 	long completedTimestamp;
 	TreeMap<Long, Integer> edits;
+	int result;
+	
+	static double L2norm = 0;
 	
 	public AfterSuccessWorkCollector() {
 		isCompleted = false;
@@ -38,26 +41,34 @@ public class AfterSuccessWorkCollector implements DataCollector {
 	public String getName() {
 		return "work_after_completion";
 	}
-
+	
 	@Override
-	public String getResult() {
+	public void calculateResult() {
 		if (!isCompleted) {
-			return "0";
+			result = 0;
+			return;
 		}
 		
 		Long startKey = edits.higherKey(completedTimestamp);
 		
 		if (startKey == null) {
-			return "0";
+			result = 0;
+			return;
 		}
-		
-		//edits.lowerEntry(completedTimestamp).getValue()
 		
 		try {
-			return Integer.toString(edits.tailMap(startKey, true).values().stream().reduce(Integer::sum).get());			
+			result = edits.tailMap(startKey, true).values().stream().reduce(Integer::sum).get();
+			L2norm += Math.pow(result, 2);
 		} catch (NoSuchElementException e) {
-			return "0";
+			result = 0;
 		}
+	}
+
+	@Override
+	public String getResult() {
+		double normalizedResult = result/Math.sqrt(L2norm);
+		
+		return String.format("%.3f", normalizedResult);
 	}
 
 }

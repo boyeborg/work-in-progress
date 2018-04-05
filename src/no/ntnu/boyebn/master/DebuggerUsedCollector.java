@@ -25,6 +25,9 @@ public class DebuggerUsedCollector implements DataCollector {
 	public String getName() {
 		return "debugger_used";
 	}
+	
+	@Override
+	public void calculateResult() {}
 
 	@Override
 	public String getResult() {

@@ -23,10 +23,13 @@ public class CompletionCollector implements DataCollector {
 	public String getName() {
 		return "completion";
 	}
+	
+	@Override
+	public void calculateResult() {}
 
 	@Override
 	public String getResult() {
-		return Double.toString(completion);
+		return String.format("%.3f", completion);
 	}
 
 }

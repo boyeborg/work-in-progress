@@ -10,8 +10,10 @@ import no.hal.learning.exercise.jdt.impl.JdtSourceEditEventImpl;
 
 public class TotalTimeCollector implements DataCollector {
 	
+	static double L2norm = 0;
 	double maxPauseTimeInMillis;
 	List<Double> timestamps;
+	long result;
 	
 	public TotalTimeCollector(double maxPauseTimeInMillis) {
 		this.maxPauseTimeInMillis = maxPauseTimeInMillis;
@@ -32,7 +34,7 @@ public class TotalTimeCollector implements DataCollector {
 	}
 	
 	@Override
-	public String getResult() {
+	public void calculateResult() {
 		Collections.sort(timestamps);
 		
 		double prevTime = -1;
@@ -46,8 +48,19 @@ public class TotalTimeCollector implements DataCollector {
 			prevTime = time;
 		}
 		
-		// Convert to seconds
-		return Long.toString(Math.round(totalTime/(1000.0)));
+		result = Math.round(totalTime/(1000.0));
+		
+		L2norm += Math.pow(result, 2);
 	}
+	
+	@Override
+	public String getResult() {
+		
+		double normalizedResult = result/Math.sqrt(L2norm);
+		
+		return String.format("%.3f", normalizedResult);
+	}
+	
+	
 	
 }
