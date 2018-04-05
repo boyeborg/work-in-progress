@@ -27,13 +27,14 @@ import no.hal.learning.exercise.workspace.WorkspacePackage;
 
 public class Export {
 	
-	static String EXERCISE_PATH = "data/Øving 5";
+	static String EXERCISE_PATH = "data/Øving 6";
 	static DataCollectorFactory.Collector[] collectors = {
 			DataCollectorFactory.Collector.AfterSuccessWork,
 			DataCollectorFactory.Collector.Completion,
-			DataCollectorFactory.Collector.DebugRuns,
+			DataCollectorFactory.Collector.DebuggerUsed,
 			DataCollectorFactory.Collector.EditCenterOfMass,
-			DataCollectorFactory.Collector.TotalTime
+			DataCollectorFactory.Collector.TotalTime,
+			DataCollectorFactory.Collector.WarningCount
 	};
 
 	public static void main(String[] args) {
