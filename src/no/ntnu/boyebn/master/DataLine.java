@@ -24,6 +24,12 @@ public class DataLine {
 		}
 	}
 	
+	public void calculateResult() {
+		for (DataCollector collector : collectors) {
+			collector.calculateResult();
+		}
+	}
+	
 	public String[] getResults() {
 		String[] results = new String[collectors.length+2];
 		
