@@ -7,13 +7,15 @@ public class DataCollectorFactory {
 		Completion,
 		DebugRuns,
 		EditCenterOfMass,
-		TotalTime
+		TotalTime,
+		DebuggerUsed,
+		WarningCount
 	}
 	
 	public static DataCollector getCollector(Collector collector) {
 		switch (collector) {
 		case AfterSuccessWork:
-			return new AfterSuccessWorkCollector(10 * 60 * 1000); // 10 minutes
+			return new AfterSuccessWorkCollector();
 		case Completion:
 			return new CompletionCollector();
 		case DebugRuns:
@@ -22,6 +24,10 @@ public class DataCollectorFactory {
 			return new EditCenterOfMassCollector();
 		case TotalTime:
 			return new TotalTimeCollector(10 * 60 * 1000); // 10 minutes
+		case DebuggerUsed:
+			return new DebuggerUsedCollector();
+		case WarningCount:
+			return new WarningCountCollector();
 		default:
 			return null;
 		}
