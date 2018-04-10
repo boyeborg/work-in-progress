@@ -115,4 +115,5 @@ Temporary Items
 # End of https://www.gitignore.io/api/java,macos,eclipse
 
 exportedData.csv
-data/
+data/*
+!data/.gitkeep
