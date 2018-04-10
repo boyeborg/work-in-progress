@@ -22,6 +22,8 @@ Feel free to add or remove collectors as needed. For more information on how the
 
 For each exercise-file, a `DataLine` object is created. This class creates new collectors (through the `DataCollectorFactory` class) to be used for that exercise, and is used to get a comma separated line for the CSV containing the data collected and the student ID and exercise number (a unique number representing the exercise).
 
+Edit the static string `ASSIGNMENT_PATH` to point to a folder containing one folder for each student (the name of the folder will be the student ID). Each student folder might contain multiple exercises.
+
 
 ## Collectors
 

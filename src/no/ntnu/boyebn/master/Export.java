@@ -27,7 +27,7 @@ import no.hal.learning.exercise.workspace.WorkspacePackage;
 
 public class Export {
 	
-	static String EXERCISE_PATH = "data/Øving 6";
+	static String ASSIGNMENT_PATH = "data/Øving 6";
 	static DataCollectorFactory.Collector[] collectors = {
 			DataCollectorFactory.Collector.AfterSuccessWork,
 			DataCollectorFactory.Collector.Completion,
@@ -57,7 +57,7 @@ public class Export {
 		List<DataLine> lines = new ArrayList<>();
 		
 		// Loop through the student folders within the exercise folder
-		for (File studentDirectory : new File(EXERCISE_PATH).listFiles(File::isDirectory)) {
+		for (File studentDirectory : new File(ASSIGNMENT_PATH).listFiles(File::isDirectory)) {
 			
 			// Store the student ID
 			String studentId = studentDirectory.getName();
