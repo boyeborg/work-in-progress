@@ -27,7 +27,7 @@ import no.hal.learning.exercise.workspace.WorkspacePackage;
 
 public class Export {
 	
-	static String EXERCISE_PATH = "data/Øving 5";
+	static String EXERCISE_PATH = "data/Øving 6";
 	static DataCollectorFactory.Collector[] collectors = {
 			DataCollectorFactory.Collector.AfterSuccessWork,
 			DataCollectorFactory.Collector.Completion,
@@ -116,7 +116,7 @@ public class Export {
 		lines.stream().map(DataLine::toString).forEach(csvLines::add);
 		
 		// Get the CSV file
-		Path csvFile = Paths.get("data/data_5.csv");
+		Path csvFile = Paths.get("data/export.csv");
 		
 		// Write the lines to the CSV file
 		try {
